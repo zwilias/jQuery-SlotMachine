@@ -1,3 +1,10 @@
+/*
+  * jQuery Slot Machine v1.0.0
+  * https://github.com/josex2r/jQuery-SlotMachine
+  *
+  * Copyright 2014 Jose Luis Represa
+  * Released under the MIT license
+*/
 (function($) {
 			
 	//Set required styles, filters and masks
@@ -62,16 +69,16 @@
 	//Required easing functions
 	if( typeof $.easing.easeOutBounce!=="function" ){
 		//From jQuery easing, extend jQuery animations functions
-		$.extend( jQuery.easing, {
+		$.extend( $.easing, {
 			easeOutBounce: function (x, t, b, c, d) {
 				if ((t/=d) < (1/2.75)) {
 					return c*(7.5625*t*t) + b;
 				} else if (t < (2/2.75)) {
-					return c*(7.5625*(t-=(1.5/2.75))*t + .75) + b;
+					return c*(7.5625*(t-=(1.5/2.75))*t + 0.75) + b;
 				} else if (t < (2.5/2.75)) {
-					return c*(7.5625*(t-=(2.25/2.75))*t + .9375) + b;
+					return c*(7.5625*(t-=(2.25/2.75))*t + 0.9375) + b;
 				} else {
-					return c*(7.5625*(t-=(2.625/2.75))*t + .984375) + b;
+					return c*(7.5625*(t-=(2.625/2.75))*t + 0.984375) + b;
 				}
 			},
 		});
@@ -85,23 +92,25 @@
 	$.fn.slotMachine = function(settings){
 		
 		var defaults = {
-				active	: 0, //Active element [int]
-				delay	: 200, //Animation time [int]
-				repeat	: false //Repeat delay [false||int]
-			},
-			settings = $.extend(defaults, settings), //Plugin settings
-			$slot = $(this), //jQuery selector
+			active	: 0, //Active element [int]
+			delay	: 200, //Animation time [int]
+			repeat	: false //Repeat delay [false||int]
+		};
+		
+		settings = $.extend(defaults, settings); //Plugin settings
+		
+		var	$slot = $(this), //jQuery selector
 			$titles = $slot.children(), //Slot Machine elements
 			$container, //Container to wrap $titles
-			maxTop, //Max marginTop offset
+			_maxTop, //Max marginTop offset
 			_timer = null, //Timeout recursive function to handle auto (settings.repeat)
 			_currentAnim = null, //Current playing jQuery animation
 			_forceStop = false, //Force execution for some functions
 			_oncompleteShuffling = null, //Callback function
 			_isRunning = false, //Machine is running?
 			_active = { //Current active element
-				index : settings.active,
-				el	  : $titles.get( settings.active )
+				index	: settings.active,
+				el		: $titles.get( settings.active )
 			};
 		
 		/**
@@ -125,7 +134,7 @@
 			var rnd;
 			do{
 				rnd = Math.floor( Math.random() * $titles.length );
-			}while( rnd==_active.index && rnd>=0 );
+			}while( rnd===_active.index && rnd>=0 );
 			
 			//Choose element
 			var choosen = {
@@ -158,26 +167,26 @@
 		  * @return int - Element index and HTML node
 		*/ 
 		function _getPrev(){
-			var prevIndex = _active.index-1<0 ? $titles.length-1 : _active.index-1
+			var prevIndex = _active.index-1<0 ? $titles.length-1 : _active.index-1;
 			var prevObj = {
-				index : prevIndex,
-				el	  : $titles.get(prevIndex)
-			}
+				index	: prevIndex,
+				el		: $titles.get(prevIndex)
+			};
 			return prevObj;
-		};
+		}
 		
 		/**
 		  * @desc PRIVATE - Get the next element
 		  * @return int - Element index and HTML node
 		*/ 
 		function _getNext(){
-			var nextIndex = _active.index+1<$titles.length ? _active.index+1 : 0
+			var nextIndex = _active.index+1<$titles.length ? _active.index+1 : 0;
 			var nextObj = {
-				index : nextIndex,
-				el	  : $titles.get(nextIndex)
-			}
+				index	: nextIndex,
+				el		: $titles.get(nextIndex)
+			};
 			return nextObj;
-		};
+		}
 		
 		/**
 		  * @desc PRIVATE - Set CSS classes to make speed effect
@@ -220,13 +229,15 @@
 			
 			_isRunning = true;
 			
+			var delay = settings.delay;
+			
 			//Infinite animation
 			if( count===undefined ){
 				
 				//Set animation effects
 				_setAnimationFX("fast", true);
 				
-				var delay = settings.delay / 2;
+				delay /= 2;
 				
 				if( _isVisible() ){
 					
@@ -268,8 +279,6 @@
 				
 				//Perform fast animation
 				if( count>=1 ){
-					
-					var delay = settings.delay;
 					
 					if( count>1 ){
 						
@@ -516,7 +525,7 @@
 			
 			_stop(true, _getPrev);
 			
-		}
+		};
 		
 		/**
 		  * @desc PUBLIC - SELECT next element relative to the current active element
@@ -525,7 +534,7 @@
 			
 			_stop(true, _getNext);
 			
-		}
+		};
 		
 		/**
 		  * @desc PUBLIC - Get selected element
@@ -533,7 +542,7 @@
 		*/
 		$slot.active = function(){
 			return _getActive();
-		}
+		};
 		
 		/**
 		  * @desc PUBLIC - Check if the machine is doing stuff
