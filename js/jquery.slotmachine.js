@@ -1,11 +1,7 @@
-/*
-  * jQuery Slot Machine v1.0.0
-  * https://github.com/josex2r/jQuery-SlotMachine
-  *
-  * Copyright 2014 Jose Luis Represa
-  * Released under the MIT license
-*/
-(function($) {
+/*! SlotMachine - v1.0.0 - 2014-06-23
+* https://github.com/josex2r/jQuery-SlotMachine
+* Copyright (c) 2014 Jose Luis Represa; Licensed MIT */
+;(function($, window, document, undefined){
 			
 	//Set required styles, filters and masks
 	
@@ -94,7 +90,8 @@
 		var defaults = {
 			active	: 0, //Active element [int]
 			delay	: 200, //Animation time [int]
-			repeat	: false //Repeat delay [false||int]
+			repeat	: false, //Repeat delay [false||int]
+			randomize : null //Randomize function, must return an integer with the selected position
 		};
 		
 		settings = $.extend(defaults, settings); //Plugin settings
@@ -145,21 +142,24 @@
 		}
 		
 		/**
-		  * @desc PRIVATE - Get currently active element
-		  * @return object elWithIndex - Element index and HTML node
-		*/
-		function _getActive(){
-			//Update last choosen element index
-			return _active;
-		}
-		
-		/**
-		  * @desc PRIVATE - Set currently showing element and makes active
-		  * @param object elWithIndex - Element index and HTML node
-		*/
-		function _setActive( elWithIndex ){
-			//Update last choosen element index
-			_active = elWithIndex;
+		  * @desc PRIVATE - Get the randomize setting function element
+		  * @return int - Element index and HTML node
+		*/ 
+		function _getCustom(){
+			var choosen = {};
+			if( settings.randomize!==null && typeof settings.randomize==='function' ){
+				var index = settings.randomize(_active.index);
+				if( index<0 || index>=$titles.length ){
+					index = 0;
+				}
+				choosen = {
+					index : index,
+					el : $titles.get( index )
+				};
+			}else{
+				choosen = _getRandom();
+			}
+			return choosen;
 		}
 		
 		/**
@@ -186,6 +186,24 @@
 				el		: $titles.get(nextIndex)
 			};
 			return nextObj;
+		}
+		
+		/**
+		  * @desc PRIVATE - Get currently active element
+		  * @return object elWithIndex - Element index and HTML node
+		*/
+		function _getActive(){
+			//Update last choosen element index
+			return _active;
+		}
+		
+		/**
+		  * @desc PRIVATE - Set currently showing element and makes active
+		  * @param object elWithIndex - Element index and HTML node
+		*/
+		function _setActive( elWithIndex ){
+			//Update last choosen element index
+			_active = elWithIndex;
 		}
 		
 		/**
@@ -369,11 +387,14 @@
 				rnd = getElementFn();
 				
 			}else{
-				if( settings.repeat ){
+				if( settings.randomize!==null && typeof settings.randomize==='function' ){
+					rnd = _getCustom();
+				}else if( settings.repeat ){
 					rnd = _getNext();
 				}else{
 					rnd = _getRandom();
 				}
+				
 			}
 								
 			//Stop animation NOW!!!!!!!
@@ -445,7 +466,7 @@
 			
 			if( _forceStop===false ){
 				
-				delay = delay===undefined ? 1 : settings.repeat + 1725;
+				delay = delay===undefined ? 1 : settings.repeat + 1000;
 				
 				_timer = setTimeout(function(){
 					
@@ -561,4 +582,4 @@
 		
 	};
 	
-})(jQuery);
+})( jQuery, window, document );
