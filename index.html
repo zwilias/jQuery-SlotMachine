@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=2.0">
 		<title>jQuery Slot Machine</title>
 
 		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=2.0">
@@ -38,7 +39,7 @@
 									$("#textMachine").slotMachine({
 										active	: 1,
 										delay	: 450,
-										repeat	: 1500
+										auto	: 1500
 									});
 								});
 							</script>
@@ -203,7 +204,7 @@
 							var machine2 = $("#machineFake2").slotMachine({
 								active	: 1,
 								delay	: 500,
-								repeat	: 1500,
+								auto	: 1500,
 								randomize : function(activeElementIndex){
 									return 1;
 								}
@@ -385,7 +386,7 @@
 						$("#textMachine2").slotMachine({
 							active	: 1,
 							delay	: 450,
-							repeat	: 1500
+							auto	: 1500
 						});
 					});
 				</script>

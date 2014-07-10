@@ -17,8 +17,12 @@ a:hover{
 html {
     position: relative;
     min-height: 100%;
+    width: 100%;
+	max-width: 100%;
 }
 body {
+	width: 100%;
+	max-width: 100%;
 }
 footer {
     position: absolute;
