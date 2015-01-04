@@ -218,6 +218,9 @@
 		
 		this.$container.prepend( this._$fakeFirstTile );
 		this.$container.append( this._$fakeLastTile );
+      
+        //Don't forget to keep track of the fake tiles as well
+        this.$allTiles = this.$container.children();
 		
 		//Set min top offset
 		this._minTop = - this._$fakeFirstTile.outerHeight();
@@ -326,12 +329,12 @@
 		var self = this;
 		
 		setTimeout(function(){
-			self.$tiles.removeClass(FX_FAST).removeClass(FX_NORMAL).removeClass(FX_SLOW).addClass(FX_SPEED);
+			self.$allTiles.removeClass(FX_FAST).removeClass(FX_NORMAL).removeClass(FX_SLOW).addClass(FX_SPEED);
 			
 			if(fade !== true || FX_SPEED === FX_STOP){
-				self.$slot.add(self.$tiles).removeClass(FX_GRADIENT);
+				self.$slot.add(self.$allTiles).removeClass(FX_GRADIENT);
 			}else{
-				self.$slot.add(self.$tiles).addClass(FX_GRADIENT);
+				self.$slot.add(self.$allTiles).addClass(FX_GRADIENT);
 			}
 		}, this.settings.delay / 4);
 	};
